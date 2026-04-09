@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Akhir Matematika - Pengolahan Data</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 30px; color: #2c3e50; line-height: 1.6; }
+        .assessment-container { max-width: 950px; margin: auto; background: white; padding: 50px; border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        
+        h1 { text-align: center; color: #2c3e50; text-transform: uppercase; letter-spacing: 2px; border-bottom: 4px double #3498db; padding-bottom: 15px; }
+        .instruction { background: #e8f4fd; padding: 20px; border-left: 5px solid #3498db; margin-bottom: 40px; font-size: 0.95em; }
+
+        .soal-wrapper { margin-bottom: 60px; counter-increment: soal-counter; }
+        .soal-wrapper h3::before { content: "Soal " counter(soal-counter) ": "; }
+        .soal-wrapper h3 { color: #2980b9; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        .visual-container { background: #fff; border: 1px solid #e1e1e1; padding: 25px; border-radius: 8px; margin: 20px 0; text-align: center; }
+        
+        /* Table Style */
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .data-table th, .data-table td { border: 1px solid #333; padding: 12px; text-align: center; }
+        .data-table th { background-color: #f2f2f2; }
+
+        /* Checklist Table */
+        .check-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .check-table th, .check-table td { border: 1px solid #000; padding: 12px; }
+        .check-table th { background-color: #34495e; color: white; }
+        .col-answer { width: 100px; text-align: center; }
+
+        /* SVG Chart Styles */
+        .bar { fill: #3498db; transition: fill 0.3s; }
+        .bar:hover { fill: #2980b9; }
+        .axis-label { font-size: 11px; font-weight: bold; }
+        .line { fill: none; stroke: #e67e22; stroke-width: 3; }
+        .dot { fill: #d35400; }
+
+        .btn-submit { display: block; width: 100%; padding: 20px; background: #27ae60; color: white; border: none; border-radius: 5px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 40px; }
+        .btn-submit:hover { background: #219150; }
+
+        #result-display { margin-top: 30px; padding: 30px; border-radius: 8px; text-align: center; display: none; font-size: 28px; }
+        .pass { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+
+<div class="assessment-container">
+    <h1>Asesmen Sumatif Matematika: Statistika</h1>
+    
+    <div class="instruction">
+        <strong>Petunjuk Pengerjaan:</strong><br>
+        1. Amatilah data yang disajikan (tabel, diagram batang, diagram lingkaran, atau diagram garis).<br>
+        2. Analisislah tiga pernyataan yang diberikan pada setiap soal.<br>
+        3. Berilah tanda pada kolom <b>Benar</b> atau <b>Salah</b>. Perlu diingat bahwa dalam setiap soal terdapat 2 pernyataan yang benar dan 1 pernyataan yang salah.
+    </div>
+
+    <form id="assessmentForm">
+
+        <div class="soal-wrapper">
+            <h3>Data Berat Badan Siswa</h3>
+            <p>Berikut adalah hasil pengukuran berat badan siswa kelas VI SD Nusantara yang disajikan dalam tabel frekuensi:</p>
+            <div class="visual-container">
+                <table class="data-table">
+                    <tr><th>Berat Badan (kg)</th><th>Banyak Siswa (Frekuensi)</th></tr>
+                    <tr><td>35</td><td>4</td></tr>
+                    <tr><td>36</td><td>6</td></tr>
+                    <tr><td>37</td><td>10</td></tr>
+                    <tr><td>38</td><td>8</td></tr>
+                    <tr><td>40</td><td>2</td></tr>
+                </table>
+            </div>
+            <table class="check-table">
+                <tr><th>Pernyataan</th><th class="col-answer">Benar</th><th class="col-answer">Salah</th></tr>
+                <tr><td>Jumlah total siswa yang mengikuti pengukuran berat badan adalah 30 siswa.</td>
+                    <td><input type="radio" name="q1_1" value="benar"></td><td><input type="radio" name="q1_1" value="salah"></td></tr>
+                <tr><td>Modus atau data berat badan yang paling banyak dimiliki siswa adalah 37 kg.</td>
+                    <td><input type="radio" name="q1_2" value="benar"></td><td><input type="radio" name="q1_2" value="salah"></td></tr>
+                <tr><td>Rata-rata (mean) berat badan siswa pada kelompok data tersebut adalah tepat 38 kg.</td>
+                    <td><input type="radio" name="q1_3" value="benar"></td><td><input type="radio" name="q1_3" value="salah"></td></tr>
+            </table>
+        </div>
+
+        <div class="soal-wrapper">
+            <h3>Data Penjualan Alat Tulis</h3>
+            <p>Grafik di bawah ini menunjukkan jumlah penjualan alat tulis di Toko Pintar selama satu minggu terakhir:</p>
+            <div class="visual-container">
+                <svg viewBox="0 0 500 250" width="100%">
+                    <line x1="50" y1="200" x2="480" y2="200" stroke="#ccc" />
+                    <line x1="50" y1="160" x2="480" y2="160" stroke="#eee" />
+                    <line x1="50" y1="120" x2="480" y2="120" stroke="#eee" />
+                    <line x1="50" y1="80" x2="480" y2="80" stroke="#eee" />
+                    <line x1="50" y1="40" x2="480" y2="40" stroke="#eee" />
+                    
+                    <rect x="70" y="40" width="35" height="160" class="bar" /> <text x="87" y="215" class="axis-label" text-anchor="middle">Pensil</text> <text x="87" y="35" class="axis-label" text-anchor="middle">40</text>
+                    <rect x="150" y="0" width="35" height="200" class="bar" /> <text x="167" y="215" class="axis-label" text-anchor="middle">Buku</text> <text x="167" y="-5" class="axis-label" text-anchor="middle">50</text>
+                    <rect x="230" y="120" width="35" height="80" class="bar" /> <text x="247" y="215" class="axis-label" text-anchor="middle">Garisan</text> <text x="247" y="115" class="axis-label" text-anchor="middle">20</text>
+                    <rect x="310" y="80" width="35" height="120" class="bar" /> <text x="327" y="215" class="axis-label" text-anchor="middle">Hapus</text> <text x="327" y="75" class="axis-label" text-anchor="middle">30</text>
+                    <rect x="390" y="20" width="35" height="180" class="bar" /> <text x="407" y="215" class="axis-label" text-anchor="middle">Pulpen</text> <text x="407" y="15" class="axis-label" text-anchor="middle">45</text>
+                    
+                    <line x1="50" y1="20" x2="50" y2="200" stroke="#333" stroke-width="2"/>
+                </svg>
+            </div>
+            <table class="check-table">
+                <tr><th>Pernyataan</th><th class="col-answer">Benar</th><th class="col-answer">Salah</th></tr>
+                <tr><td>Alat tulis yang paling banyak terjual di Toko Pintar adalah Buku sebanyak 50 buah.</td>
+                    <td><input type="radio" name="q2_1" value="benar"></td><td><input type="radio" name="q2_1" value="salah"></td></tr>
+                <tr><td>Selisih antara penjualan alat tulis yang tertinggi dan yang terendah adalah 30 buah.</td>
+                    <td><input type="radio" name="q2_2" value="benar"></td><td><input type="radio" name="q2_2" value="salah"></td></tr>
+                <tr><td>Total seluruh alat tulis yang terjual di Toko Pintar selama seminggu adalah 200 buah.</td>
+                    <td><input type="radio" name="q2_3" value="benar"></td><td><input type="radio" name="q2_3" value="salah"></td></tr>
+            </table>
+        </div>
+
+        <div class="soal-wrapper">
+            <h3>Hobi Siswa Kelas VI</h3>
+            <p>Diagram lingkaran berikut menunjukkan kegemaran 40 siswa kelas VI dalam berolahraga:</p>
+            <div class="visual-container">
+                <svg viewBox="0 0 200 200" width="220">
+                    <circle cx="100" cy="100" r="80" fill="#f9f9f9" stroke="#333" />
+                    <path d="M 100 100 L 100 20 A 80 80 0 0 1 180 100 Z" fill="#3498db" /> <path d="M 100 100 L 180 100 A 80 80 0 0 1 20 100 Z" fill="#e74c3c" /> <path d="M 100 100 L 20 100 A 80 80 0 0 1 100 20 Z" fill="#2ecc71" /> <text x="120" y="60" font-size="10" font-weight="bold">Renang 25%</text>
+                    <text x="80" y="150" font-size="10" font-weight="bold">Sepakbola 50%</text>
+                    <text x="40" y="60" font-size="10" font-weight="bold">Basket 25%</text>
+                </svg>
+            </div>
+            <table class="check-table">
+                <tr><th>Pernyataan</th><th class="col-answer">Benar</th><th class="col-answer">Salah</th></tr>
+                <tr><td>Jumlah siswa yang gemar bermain sepakbola adalah 20 orang.</td>
+                    <td><input type="radio" name="q3_1" value="benar"></td><td><input type="radio" name="q3_1" value="salah"></td></tr>
+                <tr><td>Siswa yang gemar basket dan renang memiliki jumlah yang sama, yaitu masing-masing 10 orang.</td>
+                    <td><input type="radio" name="q3_2" value="benar"></td><td><input type="radio" name="q3_2" value="salah"></td></tr>
+                <tr><td>Total siswa yang gemar basket dan sepakbola adalah 25 orang.</td>
+                    <td><input type="radio" name="q3_3" value="benar"></td><td><input type="radio" name="q3_3" value="salah"></td></tr>
+            </table>
+        </div>
+
+        <div class="soal-wrapper">
+            <h3>Hasil Panen Padi</h3>
+            <p>Perhatikan tren hasil panen padi Desa Makmur selama 5 tahun terakhir pada diagram garis berikut:</p>
+            <div class="visual-container">
+                <svg viewBox="0 0 500 200" width="100%">
+                    <path d="M 50 150 L 150 100 L 250 120 L 350 50 L 450 80" class="line" />
+                    <circle cx="50" cy="150" r="5" class="dot" /> <text x="50" y="170" class="axis-label">2020 (10T)</text>
+                    <circle cx="150" cy="100" r="5" class="dot" /> <text x="150" y="170" class="axis-label">2021 (20T)</text>
+                    <circle cx="250" cy="120" r="5" class="dot" /> <text x="250" y="170" class="axis-label">2022 (15T)</text>
+                    <circle cx="350" cy="50" r="5" class="dot" /> <text x="350" y="170" class="axis-label">2023 (30T)</text>
+                    <circle cx="450" cy="80" r="5" class="dot" /> <text x="450" y="170" class="axis-label">2024 (25T)</text>
+                </svg>
+            </div>
+            <table class="check-table">
+                <tr><th>Pernyataan</th><th class="col-answer">Benar</th><th class="col-answer">Salah</th></tr>
+                <tr><td>Hasil panen tertinggi terjadi pada tahun 2023 dengan total panen sebesar 30 ton.</td>
+                    <td><input type="radio" name="q4_1" value="benar"></td><td><input type="radio" name="q4_1" value="salah"></td></tr>
+                <tr><td>Hasil panen padi Desa Makmur selalu mengalami kenaikan setiap tahunnya tanpa pernah turun.</td>
+                    <td><input type="radio" name="q4_2" value="benar"></td><td><input type="radio" name="q4_2" value="salah"></td></tr>
+                <tr><td>Penurunan hasil panen terjadi pada tahun 2022 dan tahun 2024.</td>
+                    <td><input type="radio" name="q4_3" value="benar"></td><td><input type="radio" name="q4_3" value="salah"></td></tr>
+            </table>
+        </div>
+
+        <div class="soal-wrapper">
+            <h3>Data Nilai Ulangan IPA</h3>
+            <p>Berikut adalah tabel nilai ulangan IPA siswa kelompok B:</p>
+            <div class="visual-container">
+                <table class="data-table">
+                    <tr><th>Nilai</th><th>Frekuensi</th></tr>
+                    <tr><td>60</td><td>2</td></tr>
+                    <tr><td>70</td><td>4</td></tr>
+                    <tr><td>80</td><td>8</td></tr>
+                    <tr><td>90</td><td>4</td></tr>
+                    <tr><td>100</td><td>2</td></tr>
+                </table>
+            </div>
+            <table class="check-table">
+                <tr><th>Pernyataan</th><th class="col-answer">Benar</th><th class="col-answer">Salah</th></tr>
+                <tr><td>Banyaknya siswa yang mengikuti ulangan IPA pada kelompok B tersebut adalah 20 siswa.</td>
+                    <td><input type="radio" name="q5_1" value="benar"></td><td><input type="radio" name="q5_1" value="salah"></td></tr>
+                <tr><td>Rata-rata (mean) nilai ulangan IPA kelompok B tersebut adalah tepat 80.</td>
+                    <td><input type="radio" name="q5_2" value="benar"></td><td><input type="radio" name="q5_2" value="salah"></td></tr>
+                <tr><td>Siswa yang mendapatkan nilai sempurna (100) adalah kelompok siswa yang paling banyak jumlahnya.</td>
+                    <td><input type="radio" name="q5_3" value="benar"></td><td><input type="radio" name="q5_3" value="salah"></td></tr>
+            </table>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="gradeAssessment()">KIRIM JAWABAN & LIHAT SKOR</button>
+    </form>
+
+    <div id="result-display"></div>
+</div>
+
+<script>
+    function gradeAssessment() {
+        // Kunci Jawaban (15 Pernyataan Total)
+        const keys = {
+            q1_1: "benar", q1_2: "benar", q1_3: "salah", // Rata-rata Q1 bkn 38
+            q2_1: "benar", q2_2: "benar", q2_3: "salah", // Total Q2 bkn 200 (185)
+            q3_1: "benar", q3_2: "benar", q3_3: "salah", // Q3: Basket(10)+Sepakbola(20)=30 bkn 25
+            q4_1: "benar", q4_2: "salah", q4_3: "benar", // Q4: Panen prnh turun di 2022
+            q5_1: "benar", q5_2: "benar", q5_3: "salah"  // Q5: Nilai terbanyak adalah 80 bkn 100
+        };
+
+        let score = 0;
+        let totalItems = Object.keys(keys).length;
+        const form = document.getElementById('assessmentForm');
+        const formData = new FormData(form);
+
+        for (let item in keys) {
+            if (formData.get(item) === keys[item]) {
+                score++;
+            }
+        }
+
+        const finalScore = Math.round((score / totalItems) * 100);
+        const display = document.getElementById('result-display');
+        display.style.display = "block";
+        display.innerHTML = "Asesmen Selesai!<br>Skor Akhir Anda: " + finalScore + " / 100";
+        
+        if (finalScore >= 75) {
+            display.className = "pass";
+        } else {
+            display.className = "fail";
+        }
+
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
